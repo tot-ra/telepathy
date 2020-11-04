@@ -1,10 +1,10 @@
 ## Definition
-A **contract test** between **consumer** and **provider** (services or libs) is a decentralized loose obligation,
+A consumer-driven **contract test** between **consumer** and **provider** (services or libs) is a decentralized loose obligation,
 that for every **rule** (recorded from a mock of producer reply in unit test) in consumer, there will be a test in producer.
 
 What this lib does it do:
 - helps to record mock into a contract with persisted format (JSON) on every unit test execution
-- defines contract as a dependency between services
+- defines contract as a dependency between services stored in specific format
 - helps to validate that contracts on both sides match
 - language and framework agnostic
 
@@ -48,8 +48,10 @@ it('should return null if php-app returns null', async () => {
 });
 ```
 
-Recorded rule is saved into a json file under `/tests/contract/my-producers/php-app.json` as php-app is the producer.
+Recorded rule is saved into a json file under `/test/contract/my-producers/php-app/contract.json` as php-app is the producer.
 
 ### Implementing a rule in producer side
-- Producer should use `className` and `testName` as unique identifiers to create tests with same file/function structure.
-- Test on producer side may use `input` and `expect` as data in the test code
+- Producer **must** have a copy of the contract in his repo, for example in `/test/contract/my-consumers/monograph/contract.json`
+- Producer **must** have a git hook to compare contract files with his consumers that would prevent development if contracts are out of sync
+- Producer **must** implement tests, using info from contract rules like `className` and `testName` as unique identifiers to create tests with same file/method structure
+- Test on producer side **may** use `input` and `expect` as data in the test code
