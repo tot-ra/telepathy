@@ -15,8 +15,8 @@ What contract-tests **do not** specify or do:
 
 ## Usage
 
-### recording a mock
-To record a mock, simply replace your mock response with `contractTest.record` with `expect` property containing what you expect from producer
+### Recording a rule in consumer unit test
+To record a rule, simply replace your mocked provider response with `contractTest.record` with `expect` property containing what you expect from the producer
 ```
 	it('should return null if php-app returns null', async () => {
 		// Arrange
@@ -47,4 +47,4 @@ To record a mock, simply replace your mock response with `contractTest.record` w
 	});
 ```
 
-### removing a rule
+### Implementing a rule in producer side
