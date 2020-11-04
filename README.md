@@ -51,3 +51,5 @@ it('should return null if php-app returns null', async () => {
 Recorded rule is saved into a json file under `/tests/contract/my-producers/php-app.json` as php-app is the producer.
 
 ### Implementing a rule in producer side
+- Producer should use `className` and `testName` as unique identifiers to create tests with same file/function structure.
+- Test on producer side may use `input` and `expect` as data in the test code
