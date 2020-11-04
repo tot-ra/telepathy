@@ -1,6 +1,6 @@
 ## Definition
 A consumer-driven **contract test** between **consumer** and **provider** (services or libs) is a decentralized loose obligation,
-that for every **rule** (recorded from a mock of producer reply in unit test) in consumer, there will be a test in producer.
+that for every **rule** (recorded from a mock expectation of producer reply in unit test) in consumer, there will be a test in producer.
 
 What this lib does it do:
 - helps to record mock into a contract with persisted format (JSON) on every unit test execution
