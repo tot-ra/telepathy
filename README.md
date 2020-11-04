@@ -18,33 +18,34 @@ What contract-tests **do not** specify or do:
 ### Recording a rule in consumer unit test
 To record a rule, simply replace your mocked provider response with `contractTest.record` with `expect` property containing what you expect from the producer
 ```
-	it('should return null if php-app returns null', async () => {
-		// Arrange
-		const req = {
-			services: {
-				phpApp: {
-					get: (path, params) => {
-						// tie mock response to a contract test recorder's expect param
-						return contractTest.record({
-							className: 'UserRoleDataloader',
-							testName: `canReturnNull`,
-							describe: expect.getState().currentTestName,
-							consumer: 'monograph',
-							producer: 'php-app',
-							input: { method: 'GET', path, params },
-							expect: null
-						});
-					}
+it('should return null if php-app returns null', async () => {
+	// Arrange
+	const req = {
+		services: {
+			phpApp: {
+				get: (path, params) => {
+					// tie mock response to a contract test recorder's expect param
+					return contractTest.record({
+						className: 'UserRoleDataloader',
+						testName: `canReturnNull`,
+						describe: expect.getState().currentTestName,
+						consumer: 'monograph',
+						producer: 'php-app',
+						input: { method: 'GET', path, params },
+						expect: null
+					});
 				}
 			}
-		};
+		}
+	};
 
-		// Act
-		const result = await objectUnderTest(req).userRoles.load([1, 2]);
+	// Act
+	// objectUnderTest will call req.services.phpApp.get('/some/path', params)
+	const result = await objectUnderTest(req).userRoles.load([1, 2]);
 
-		// Assert
-		assert.deepEqual(result, null);
-	});
+	// Assert
+	assert.deepEqual(result, null);
+});
 ```
 
 ### Implementing a rule in producer side
