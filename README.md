@@ -48,4 +48,6 @@ it('should return null if php-app returns null', async () => {
 });
 ```
 
+Recorded rule is saved into a json file under `/tests/contract/my-producers/php-app.json` as php-app is the producer.
+
 ### Implementing a rule in producer side
