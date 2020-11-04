@@ -1,5 +1,5 @@
 ## Definition
-A consumer-driven **contract test** between **consumer** and **provider** (services or libs) is a decentralized loose obligation,
+A consumer-driven 🖇️ **contract test** between **consumer** and **provider** (services or libs) is a decentralized loose obligation,
 that for every **rule** (recorded from a mock expectation of producer reply in unit test) in consumer, there will be a test in producer.
 
 What this lib does it do:
