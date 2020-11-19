@@ -1,6 +1,6 @@
 {
   "name": "@pipedrive/telepathy",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Contract testing library",
   "main": "index.js",
   "scripts": {
