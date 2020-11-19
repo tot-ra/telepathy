@@ -15,9 +15,15 @@ What contract-tests **do not** specify or do:
 
 ## Usage
 
-### Recording a rule in consumer unit test
-To record a rule, simply replace your mocked provider response with `contractTest.record` with `expect` property containing what you expect from the producer
 ```
+npm install @pipedrive/telepathy --save-dev
+```
+
+### Recording a rule in consumer unit test
+To record a rule, simply replace your mocked provider response with `telepathy.record` with `expect` property containing what you expect from the producer
+```
+const telepathy = require('@pipedrive/telepathy');
+
 it('should return null if php-app returns null', async () => {
 	// Arrange
 	const req = {
@@ -25,7 +31,7 @@ it('should return null if php-app returns null', async () => {
 			phpApp: {
 				get: (path, params) => {
 					// tie mock response to a contract test recorder's expect param
-					return contractTest.record({
+					return telepathy.record({
 						className: 'UserRoleDataloader',
 						testName: `canReturnNull`,
 						describe: expect.getState().currentTestName,
@@ -48,10 +54,33 @@ it('should return null if php-app returns null', async () => {
 });
 ```
 
-Recorded rule is saved into a json file under `/test/contract/my-producers/php-app/contract.json` as php-app is the producer.
+Recorded rule is saved into a json file under `/test/contract/producers/php-app.json` as php-app is the producer.
+
+
+
+
+### Declaring dependencies in producer service
+In your producer service, edit package.json, add array of consumers your service must match as well as
+command to compare contracts in both repos:
+```json
+"scripts": {
+	"test-consumers": "node ./node_modules/@pipedrive/telepathy/verifyContracts.js"
+},
+"telepathy":{
+	"consumers": [
+		  {
+			  "name": "monograph",
+			  "repo": "https://github.com/pipedrive/monograph",
+			  "branch": "CTL-1545-contracts",
+			  "folder": "test/contract/producers/"
+		  }
+	  ]
+}
+```
+
 
 ### Implementing a rule in producer side
-- Producer **must** have a copy of the contract in his repo, for example in `/test/contract/my-consumers/monograph/contract.json`
+- Producer **must** have a copy of the contract in his repo, for example in `/test/contract/consumers/monograph.json`
 - Producer **must** have a git hook to compare contract files with his consumers that would prevent development if contracts are out of sync
 - Producer **must** implement tests, using info from contract rules like `className` and `testName` as unique identifiers to create tests with same file/method structure
 - Test on producer side **may** use `input` and `expect` as data in the test code
