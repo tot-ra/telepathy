@@ -50,7 +50,7 @@ function getContractPaths() {
 	}
 	const producersDir = path.join(
 		rootPath,
-		...config.consumersSubPath
+		...config.producersSubPath
 	);
 
 	if (!fs.existsSync(producersDir)) {
@@ -88,7 +88,7 @@ let telepathy = {
 				const remoteContract = require(`${consumersDir}/.tmp/${consumer.folder}${config.name}.json`);
 				const localContract = require(`${consumersDir}/${consumer.name}.json`);
 
-				if(!util.isDeepStrictEqual(remoteContract, localContract)){
+				if (!util.isDeepStrictEqual(remoteContract, localContract)) {
 					console.error("Failed. Local and remote contracts are not the same");
 				}
 				exec('rm -rf .tmp');
