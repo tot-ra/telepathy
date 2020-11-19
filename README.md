@@ -1,6 +1,6 @@
 ## Definition
-A consumer-driven 🖇️ **contract test** between **consumer** and **provider** (services or libs) is a decentralized loose obligation,
-that for every **rule** (recorded from a mock expectation of producer reply in unit test) in consumer, there will be a test in producer.
+A consumer-driven **telepathy test** between **consumer** 🧑‍🚀 and **producer** 🚀 (services or libs) is a decentralized loose obligation,
+that for every expectation in consumer 🧑‍🚀 (recorded rule from a mock of producer's reply in unit test), there will be a test in producer 🚀.
 
 What this lib does:
 - helps to record mock into a contract with persisted format (JSON) on every unit test execution
@@ -19,6 +19,7 @@ What contract-tests **do not** specify or do:
 npm install @pipedrive/telepathy --save-dev
 ```
 
+## Consumer 🧑‍🚀
 ### Recording a rule in consumer unit test
 To record a rule, simply replace your mocked provider response with `telepathy.record` with `expect` property containing what you expect from the producer
 ```
@@ -64,8 +65,13 @@ Recorded rule is saved into a json file under `/test/contract/producers/php-app.
 - `input` - optional param (any type) to explain what gets passed to the producer
 - `expect` - response value that is expected to be returned by the producer, given provided input or described usage scenario. Used as a mock value by default in consumer unit-test
 
+## Producer 🚀
+- Producer **must** have a copy of the contract in his repo, for example in `/test/contract/consumers/monograph.json`
+- Producer **must** have a git hook to compare contract files with his consumers that would prevent development if contracts are out of sync
+- Producer **must** implement tests, using info from contract rules like `className` and `testName` as unique identifiers to create tests with same file/method structure
+- Test on producer side **may** use `input` and `expect` as data in the test code
 
-### Declaring dependencies in producer service
+### Declaring dependencies
 In your producer service, edit package.json, add array of consumers your service must match as well as
 command to compare contracts in both repos:
 ```json
@@ -84,9 +90,3 @@ command to compare contracts in both repos:
 }
 ```
 
-
-### Implementing a rule in producer side
-- Producer **must** have a copy of the contract in his repo, for example in `/test/contract/consumers/monograph.json`
-- Producer **must** have a git hook to compare contract files with his consumers that would prevent development if contracts are out of sync
-- Producer **must** implement tests, using info from contract rules like `className` and `testName` as unique identifiers to create tests with same file/method structure
-- Test on producer side **may** use `input` and `expect` as data in the test code
