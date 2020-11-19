@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Contract testing library",
   "main": "index.js",
-  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0"
   },
