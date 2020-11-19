@@ -74,7 +74,8 @@ Recorded rule is saved into a json file under `/test/contract/producers/php-app.
 - `expect` - response value that is expected to be returned by the producer, given provided input or described usage scenario. Used as a mock value by default in consumer unit-test
 
 ## Producer 🚀
-- Producer **must** have a copy of the contract in his repo, for example in `/test/contract/consumers/monograph.json`
+- Producer **must** have a copy of the contract in his repo, so for example 
+`/test/contract/producers/php-app.json` in monograph = `/test/contract/consumers/monograph.json` in php-app
 - Producer **must** have a git hook to compare contract files with his consumers that would prevent development if contracts are out of sync
 - Producer **must** implement tests, using info from contract rules like `className` and `testName` as unique identifiers to create tests with same file/method structure
 - Test on producer side **may** use `input` and `expect` as data in the test code
