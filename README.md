@@ -1,10 +1,10 @@
 ## Definition
 A consumer-driven **telepathy test** between **consumer** 📺 and **producer** 🎥 (services or libs) is a decentralized loose obligation,
-that for every expectation in consumer (recorded rule from a mock of producer's reply in unit test), there will be a test in producer.
+that for every expectation in consumer, there will be a test in producer. 
 
 What this lib does:
-- helps to record mock into a contract with persisted format (JSON) on every unit test execution
-- defines contract as a dependency between services stored in specific format
+- helps to record a mock expectations as a contract into a file on every unit test execution from consumer side
+- defines contract as a dependency between services stored in specific, interchangeable format (JSON)
 - helps to validate that contracts on both sides match
 - language and framework agnostic
 
