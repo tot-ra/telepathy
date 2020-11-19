@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const { cd, exec } = require('shelljs');
+const util = require('util');
 
 function getConfig() {
 	const relPath = path.join(findProjectRoot(), 'package.json');
@@ -83,14 +84,20 @@ let telepathy = {
 				cd(`..`);
 
 				console.log("Comparing local and remote contracts with diff tool..");
-				exec(`diff .tmp/${consumer.folder}${config.name}.json ${consumer.name}.json -w -E`)
+
+				const remoteContract = require(`${consumersDir}/.tmp/${consumer.folder}${config.name}.json`);
+				const localContract = require(`${consumersDir}/${consumer.name}.json`);
+
+				if(!util.isDeepStrictEqual(remoteContract, localContract)){
+					console.error("Failed. Local and remote contracts are not the same");
+				}
 				exec('rm -rf .tmp');
 			}
 		});
 	},
 
 	record: (params) => {
-		let [tests, contractsFile] = telepathy.load(params.producer, params.consumer);
+		let [tests, contractsFile] = telepathy.loadProducerContract(params.producer, params.consumer);
 
 		tests.push(params);
 		fs.writeFileSync(contractsFile, JSON.stringify(tests, null, 2));
@@ -98,10 +105,10 @@ let telepathy = {
 		return params.expect;
 	},
 
-	load: (producer) => {
-		const [consumersDir] = getContractPaths();
+	loadProducerContract: (producer) => {
+		const [consumersDir, producersDir] = getContractPaths();
 
-		const contractsFile = path.join(consumersDir, `${producer}.json`);
+		const contractsFile = path.join(producersDir, `${producer}.json`);
 
 		let tests = [];
 
