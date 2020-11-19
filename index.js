@@ -30,6 +30,8 @@ function findProjectRoot(start) {
 	return root;
 };
 
+export const verify = () => true
+
 export const recorder = {
 	record: (params) => {
 		const [tests, contractsFile] = recorder.load(params.producer, params.consumer);
