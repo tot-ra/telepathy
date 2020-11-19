@@ -1,15 +1,18 @@
 /* eslint-disable no-console */
 const fs = require('fs');
 const path = require('path');
-const fs = require('fs');
 
 function getConfig() {
 	const relPath = path.join(findProjectRoot(), 'package.json');
-	const config = {};
+	let defaultConfig = {
+		subPath: ['test', 'contract', 'my-producers']
+	};
 
 	if (fs.existsSync(relPath)) {
 		config = require(relPath).telepathy;
 	}
+
+	config = Object.assign({}, defaultConfig, config);
 
 	return config;
 }
@@ -30,11 +33,13 @@ function findProjectRoot(start) {
 	return root;
 };
 
-export const verify = () => true
+let telepathy = {
+	verify: function () {
+		return true
+	},
 
-export const recorder = {
 	record: (params) => {
-		const [tests, contractsFile] = recorder.load(params.producer, params.consumer);
+		let [tests, contractsFile] = telepathy.load(params.producer, params.consumer);
 
 		tests.push(params);
 		fs.writeFileSync(contractsFile, JSON.stringify(tests, null, 2));
@@ -45,7 +50,7 @@ export const recorder = {
 	load: (producer) => {
 		const rootPath = findProjectRoot()
 		const config = getConfig();
-		const subPath = config.subPath ? config.subPath : ['test', 'contract', 'my-producers']
+		const subPath = config.subPath;
 		const dir = path.join(
 			rootPath,
 			...subPath
@@ -65,4 +70,6 @@ export const recorder = {
 
 		return [tests, contractsFile];
 	}
-};
+}
+
+module.exports = telepathy;
