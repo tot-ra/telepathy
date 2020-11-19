@@ -21,6 +21,14 @@ npm install @pipedrive/telepathy --save-dev
 
 ## Consumer 🧑‍🚀
 ### Recording a rule in consumer unit test
+Contract rules are stored in json files during unit test execution. To make sure they are always up-to-date, make sure to remove previous contracts when you're running unit tests:
+```
+"scripts": {
+  "test": "rm -rf test/contract/producers/ && jest"
+}
+```
+
+
 To record a rule, simply replace your mocked provider response with `telepathy.record` with `expect` property containing what you expect from the producer
 ```
 const telepathy = require('@pipedrive/telepathy');
