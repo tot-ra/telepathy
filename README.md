@@ -1,6 +1,6 @@
 ## Definition
-A consumer-driven **telepathy test** between **consumer** 🧑‍🚀 and **producer** 🚀 (services or libs) is a decentralized loose obligation,
-that for every expectation in consumer 🧑‍🚀 (recorded rule from a mock of producer's reply in unit test), there will be a test in producer 🚀.
+A consumer-driven **telepathy test** between **consumer** 📺 and **producer** 🎥 (services or libs) is a decentralized loose obligation,
+that for every expectation in consumer (recorded rule from a mock of producer's reply in unit test), there will be a test in producer.
 
 What this lib does:
 - helps to record mock into a contract with persisted format (JSON) on every unit test execution
@@ -19,7 +19,7 @@ What contract-tests **do not** specify or do:
 npm install @pipedrive/telepathy --save-dev
 ```
 
-## Consumer 🧑‍🚀
+## Consumer 📺
 ### Recording a rule in consumer unit test
 Contract rules are stored in json files during unit test execution. To make sure they are always up-to-date, make sure to remove previous contracts when you're running unit tests:
 ```
@@ -73,7 +73,7 @@ Recorded rule is saved into a json file under `/test/contract/producers/php-app.
 - `input` - optional param (any type) to explain what gets passed to the producer
 - `expect` - response value that is expected to be returned by the producer, given provided input or described usage scenario. Used as a mock value by default in consumer unit-test
 
-## Producer 🚀
+## Producer 🎥
 - Producer **must** have a copy of the contract in his repo, so for example 
 `/test/contract/producers/php-app.json` in monograph = `/test/contract/consumers/monograph.json` in php-app
 - Producer **must** have a git hook to compare contract files with his consumers that would prevent development if contracts are out of sync
