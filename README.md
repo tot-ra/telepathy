@@ -34,7 +34,7 @@ it('should return null if php-app returns null', async () => {
 					return telepathy.record({
 						className: 'UserRoleDataloader',
 						testName: `canReturnNull`,
-						describe: expect.getState().currentTestName,
+						description: expect.getState().currentTestName,
 						consumer: 'monograph',
 						producer: 'php-app',
 						input: { method: 'GET', path, params },
@@ -57,6 +57,12 @@ it('should return null if php-app returns null', async () => {
 Recorded rule is saved into a json file under `/test/contract/producers/php-app.json` as php-app is the producer.
 
 
+## Rule Format
+- `className` & `testName` - params used on producer side to find which test corresponds to the rule
+- `consumer` & `producer` - service/lib names, used in name of contract files, must match package.json `name` field in case of verification on nodejs side
+- `description` - optional. Helpful text to explain use-case of what is expected in human-readable form
+- `input` - optional param (any type) to explain what gets passed to the producer
+- `expect` - response value that is expected to be returned by the producer, given provided input or described usage scenario. Used as a mock value by default in consumer unit-test
 
 
 ### Declaring dependencies in producer service
