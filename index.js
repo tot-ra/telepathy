@@ -100,7 +100,6 @@ let telepathy = {
 
 	load: (producer) => {
 		const [consumersDir] = getContractPaths();
-		ensureFolderExists(consumersDir);
 
 		const contractsFile = path.join(consumersDir, `${producer}.json`);
 
