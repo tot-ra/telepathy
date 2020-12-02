@@ -13,6 +13,7 @@ What contract-tests **do not** specify or do:
 - how strict or good the test is going to be and if its going to use recorded mock payload at all
 - contracts are not enforced by centralized authority (broker/notar etc), like [PACT](https://docs.pact.io/) does. So its up to both parties to implement contract consistency validation & implement its content
 
+![]()
 ## Usage
 
 ```
