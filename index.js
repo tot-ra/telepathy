@@ -88,10 +88,16 @@ let telepathy = {
 				const remoteContract = require(`${consumersDir}/.tmp/${consumer.folder}${config.name}.json`);
 				const localContract = require(`${consumersDir}/${consumer.name}.json`);
 
-				if (!util.isDeepStrictEqual(remoteContract, localContract)) {
-					console.error("Failed. Local and remote contracts are not the same");
+				if (Math.abs(parseFloat(remoteContract.meta.version) - parseFloat(localContract.meta.version)) >= 1) {
+					console.error("Failed. Local and remote contracts have different protocol major versions. Use same telepathy lib versions");
+				}
+
+				if (!util.isDeepStrictEqual(remoteContract.tests, localContract.tests)) {
+					console.error("Failed. Local and remote contracts are not the same. Copy remote contract locally & update tests");
 				}
 				exec('rm -rf .tmp');
+
+				console.log("Success. Local and remote contracts match");
 			}
 		});
 	},
