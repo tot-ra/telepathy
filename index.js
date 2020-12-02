@@ -7,8 +7,8 @@ const util = require('util');
 function getConfig() {
 	const relPath = path.join(findProjectRoot(), 'package.json');
 	let defaultConfig = {
-		consumersSubPath: ['test', 'contract', 'consumers'],
-		producersSubPath: ['test', 'contract', 'producers']
+		consumersSubPath: 'test/contract/consumers/',
+		producersSubPath: 'test/contract/producers/'
 	};
 
 	if (fs.existsSync(relPath)) {
