@@ -37,33 +37,34 @@ function findProjectRoot(start) {
 	return root;
 };
 
-function getContractPaths() {
-	const config = getConfig();
-	const rootPath = findProjectRoot()
-	const consumersDir = path.join(
-		rootPath,
-		...config.consumersSubPath
-	);
-
-	if (!fs.existsSync(consumersDir)) {
-		fs.mkdirSync(consumersDir, { recursive: true });
-	}
-	const producersDir = path.join(
-		rootPath,
-		...config.producersSubPath
-	);
-
-	if (!fs.existsSync(producersDir)) {
-		fs.mkdirSync(producersDir, { recursive: true });
-	}
-
-	return [consumersDir, producersDir]
-}
-
 let telepathy = {
+
+	getContractPaths: function () {
+		const config = getConfig();
+		const rootPath = findProjectRoot()
+		const consumersDir = path.join(
+			rootPath,
+			config.consumersSubPath
+		);
+
+		if (!fs.existsSync(consumersDir)) {
+			fs.mkdirSync(consumersDir, { recursive: true });
+		}
+		const producersDir = path.join(
+			rootPath,
+			config.producersSubPath
+		);
+
+		if (!fs.existsSync(producersDir)) {
+			fs.mkdirSync(producersDir, { recursive: true });
+		}
+
+		return [consumersDir, producersDir]
+	},
+
 	verifyContractsMatchConsumers: function () {
 		const config = getConfig();
-		const [consumersDir, producersDir] = getContractPaths();
+		const [consumersDir, producersDir] = telepathy.getContractPaths();
 		cd(consumersDir);
 
 		config.consumers.map((consumer) => {
@@ -88,10 +89,16 @@ let telepathy = {
 				const remoteContract = require(`${consumersDir}/.tmp/${consumer.folder}${config.name}.json`);
 				const localContract = require(`${consumersDir}/${consumer.name}.json`);
 
-				if (!util.isDeepStrictEqual(remoteContract, localContract)) {
-					console.error("Failed. Local and remote contracts are not the same");
+				if (Math.abs(parseFloat(remoteContract.meta.version) - parseFloat(localContract.meta.version)) >= 1) {
+					console.error("Failed. Local and remote contracts have different protocol major versions. Use same telepathy lib versions");
+				}
+
+				if (!util.isDeepStrictEqual(remoteContract.tests, localContract.tests)) {
+					console.error("Failed. Local and remote contracts are not the same. Copy remote contract locally & update tests");
 				}
 				exec('rm -rf .tmp');
+
+				console.log("Success. Local and remote contracts match");
 			}
 		});
 	},
@@ -100,7 +107,10 @@ let telepathy = {
 		const { version } = require('./package.json');
 		const { name } = getConfig();
 
-		let [contract, contractsFile] = telepathy.loadProducerContract(params.producer, name);
+		let [contract, contractsFile] = telepathy.loadContract(
+			`${params.producer}.json`,
+			false
+		);
 
 		contract.meta = {
 			version,
@@ -115,10 +125,27 @@ let telepathy = {
 		return params.expect;
 	},
 
-	loadProducerContract: (producer) => {
-		const [consumersDir, producersDir] = getContractPaths();
+	loadContractsFromConsumerFolder: () => {
+		const [consumersDir, producersDir] = telepathy.getContractPaths();
 
-		const contractsFile = path.join(producersDir, `${producer}.json`);
+		const fs = require('fs');
+
+		const contracts = {};
+		fs.readdirSync(consumersDir).forEach(file => {
+			if (!fs.statSync(path.join(consumersDir, file)).isDirectory()) {
+				const [contract] = telepathy.loadContract(file, true);
+				contracts[contract.meta.consumer] = contract.tests;
+			}
+		});
+
+		return contracts;
+	},
+
+	loadContract: (serviceFileName, fromConsumerFolder = true) => {
+		const [consumersDir, producersDir] = telepathy.getContractPaths();
+		const dir = fromConsumerFolder ? consumersDir : producersDir;
+
+		const contractsFile = path.join(dir, serviceFileName);
 
 		let contract = {
 			tests: {}

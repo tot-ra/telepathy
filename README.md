@@ -41,9 +41,7 @@ it('should return null if php-app returns null', async () => {
 				get: (path, params) => {
 					// tie mock response to a contract test recorder's expect param
 					return telepathy.record({
-						className: 'UserRoleDataloader',
 						testName: `canReturnNull`,
-						description: expect.getState().currentTestName,
 						consumer: 'monograph',
 						producer: 'php-app',
 						input: { method: 'GET', path, params },
@@ -67,35 +65,54 @@ Recorded rule is saved into a json file under `/test/contract/producers/php-app.
 
 
 ## Rule Format
-- `className` & `testName` - params used on producer side to find which test corresponds to the rule
+- `testName` - param used on producer side to find which test corresponds to the rule
 - `consumer` & `producer` - service/lib names, used in name of contract files, must match package.json `name` field in case of verification on nodejs side
-- `description` - optional. Helpful text to explain use-case of what is expected in human-readable form
 - `input` - optional param (any type) to explain what gets passed to the producer
 - `expect` - response value that is expected to be returned by the producer, given provided input or described usage scenario. Used as a mock value by default in consumer unit-test
 
 ## Producer 🎥
 - Producer **must** have a copy of the contract in his repo, so for example 
 `/test/contract/producers/php-app.json` in monograph = `/test/contract/consumers/monograph.json` in php-app
-- Producer **must** have a git hook to compare contract files with his consumers that would prevent development if contracts are out of sync
+- Producer **must** have automatic varification mechanism (git hook, CI) that would:
+1. compare that contract files match with his consumers 
+2. compare that declared rules are implemented in actual unit tets
+
 - Producer **must** implement tests, using info from contract rules like `className` and `testName` as unique identifiers to create tests with same file/method structure
 - Test on producer side **may** use `input` and `expect` as data in the test code
 
-### Declaring dependencies
+### Declaring dependencies & comparing contracts
 In your producer service, edit package.json, add array of consumers your service must match as well as
 command to compare contracts in both repos:
 ```json
 "scripts": {
-	"test-consumers": "node ./node_modules/@pipedrive/telepathy/verifyContracts.js"
+	"test:contracts:identical": "node ./node_modules/@pipedrive/telepathy/verifyContracts.js"
 },
 "telepathy":{
+	"consumersSubPath": "test/contract/consumers/",
+	"producersSubPath": "test/contract/producers/",
 	"consumers": [
 		  {
 			  "name": "monograph",
 			  "repo": "https://github.com/pipedrive/monograph",
 			  "branch": "CTL-1545-contracts",
-			  "folder": "test/contract/producers/"
 		  }
 	  ]
 }
 ```
 
+## Verifying test existance in producer side
+Depending on your language or test framework, you may use or implement own mechanism of verification (PRs are welcome)
+
+### Jest
+With jest, we integate using unit test reporters during execution. Given jest.config.js, just add telepathy reporter:
+```
+	reporters: [
+		'default',
+		'<rootDir>/node_modules/@pipedrive/telepathy/verifyJest.js'
+	],
+```
+
+Tests must reside in
+`<consumersSubPath>/<serviceName>/` folder (configureable in package.json, see above).
+
+Reporter will try to match `testName` from contract rules to a test name that is executed.
