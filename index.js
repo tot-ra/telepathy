@@ -97,10 +97,20 @@ let telepathy = {
 	},
 
 	record: (params) => {
-		let [tests, contractsFile] = telepathy.loadProducerContract(params.producer, params.consumer);
+		const { version } = require('./package.json');
+		const { name } = getConfig();
 
-		tests.push(params);
-		fs.writeFileSync(contractsFile, JSON.stringify(tests, null, 2));
+		let [contract, contractsFile] = telepathy.loadProducerContract(params.producer, name);
+
+		contract.meta = {
+			version,
+			consumer: name,
+			producer: params.producer,
+		}
+
+		delete params.producer;
+		contract.tests[params.testName] = params;
+		fs.writeFileSync(contractsFile, JSON.stringify(contract, null, 2));
 
 		return params.expect;
 	},
@@ -110,13 +120,15 @@ let telepathy = {
 
 		const contractsFile = path.join(producersDir, `${producer}.json`);
 
-		let tests = [];
+		let contract = {
+			tests: {}
+		};
 
 		if (fs.existsSync(contractsFile)) {
-			tests = JSON.parse(fs.readFileSync(contractsFile));
+			contract = JSON.parse(fs.readFileSync(contractsFile));
 		}
 
-		return [tests, contractsFile];
+		return [contract, contractsFile];
 	}
 }
 
