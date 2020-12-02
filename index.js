@@ -37,33 +37,34 @@ function findProjectRoot(start) {
 	return root;
 };
 
-function getContractPaths() {
-	const config = getConfig();
-	const rootPath = findProjectRoot()
-	const consumersDir = path.join(
-		rootPath,
-		...config.consumersSubPath
-	);
-
-	if (!fs.existsSync(consumersDir)) {
-		fs.mkdirSync(consumersDir, { recursive: true });
-	}
-	const producersDir = path.join(
-		rootPath,
-		...config.producersSubPath
-	);
-
-	if (!fs.existsSync(producersDir)) {
-		fs.mkdirSync(producersDir, { recursive: true });
-	}
-
-	return [consumersDir, producersDir]
-}
-
 let telepathy = {
+
+	getContractPaths: function () {
+		const config = getConfig();
+		const rootPath = findProjectRoot()
+		const consumersDir = path.join(
+			rootPath,
+			config.consumersSubPath
+		);
+
+		if (!fs.existsSync(consumersDir)) {
+			fs.mkdirSync(consumersDir, { recursive: true });
+		}
+		const producersDir = path.join(
+			rootPath,
+			config.producersSubPath
+		);
+
+		if (!fs.existsSync(producersDir)) {
+			fs.mkdirSync(producersDir, { recursive: true });
+		}
+
+		return [consumersDir, producersDir]
+	},
+
 	verifyContractsMatchConsumers: function () {
 		const config = getConfig();
-		const [consumersDir, producersDir] = getContractPaths();
+		const [consumersDir, producersDir] = telepathy.getContractPaths();
 		cd(consumersDir);
 
 		config.consumers.map((consumer) => {
@@ -106,7 +107,10 @@ let telepathy = {
 		const { version } = require('./package.json');
 		const { name } = getConfig();
 
-		let [contract, contractsFile] = telepathy.loadProducerContract(params.producer, name);
+		let [contract, contractsFile] = telepathy.loadContract(
+			`${params.producer}.json`,
+			false
+		);
 
 		contract.meta = {
 			version,
@@ -121,10 +125,27 @@ let telepathy = {
 		return params.expect;
 	},
 
-	loadProducerContract: (producer) => {
-		const [consumersDir, producersDir] = getContractPaths();
+	loadContractsFromConsumerFolder: () => {
+		const [consumersDir, producersDir] = telepathy.getContractPaths();
 
-		const contractsFile = path.join(producersDir, `${producer}.json`);
+		const fs = require('fs');
+
+		const contracts = {};
+		fs.readdirSync(consumersDir).forEach(file => {
+			if (!fs.statSync(path.join(consumersDir, file)).isDirectory()) {
+				const [contract] = telepathy.loadContract(file, true);
+				contracts[contract.meta.consumer] = contract.tests;
+			}
+		});
+
+		return contracts;
+	},
+
+	loadContract: (serviceFileName, fromConsumerFolder = true) => {
+		const [consumersDir, producersDir] = telepathy.getContractPaths();
+		const dir = fromConsumerFolder ? consumersDir : producersDir;
+
+		const contractsFile = path.join(dir, serviceFileName);
 
 		let contract = {
 			tests: {}
