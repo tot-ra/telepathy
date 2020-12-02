@@ -81,12 +81,8 @@ Recorded rule is saved into a json file under `/test/contract/producers/php-app.
 - Test on producer side **may** use `input` and `expect` as data in the test code
 
 ### Declaring dependencies & comparing contracts
-In your producer service, edit package.json, add array of consumers your service must match as well as
-command to compare contracts in both repos:
+In your producer service, edit package.json, add array of consumers your service must match
 ```json
-"scripts": {
-	"test:contracts:identical": "node ./node_modules/@pipedrive/telepathy/verifyContracts.js"
-},
 "telepathy":{
 	"consumersSubPath": "test/contract/consumers/",
 	"producersSubPath": "test/contract/producers/",
@@ -95,16 +91,28 @@ command to compare contracts in both repos:
 			  "name": "monograph",
 			  "repo": "https://github.com/pipedrive/monograph",
 			  "branch": "CTL-1545-contracts",
+			  "folder": "test/contract/producers/",
 		  }
 	  ]
 }
 ```
 
-## Verifying test existance in producer side
+### Comparing contracts
+In your producer service, edit package.json and add command that will compare contracts using **git checkout**. 
+This makes telepathy decentralized. Note that you must have access to provided dependencies above, when running the command.
+Git will checkout specific folder & branch from remote to be efficient.
+
+```json
+"scripts": {
+	"test:contracts:identical": "node ./node_modules/@pipedrive/telepathy/verifyContracts.js"
+},
+```
+
+### Verifying test existance in producer side
 Depending on your language or test framework, you may use or implement own mechanism of verification (PRs are welcome)
 
-### Jest
-With jest, we integate using unit test reporters during execution. Given jest.config.js, just add telepathy reporter:
+#### Jest
+With jest, we integate using unit test reporters during execution. Given `jest.config.js`, just add telepathy reporter:
 ```
 	reporters: [
 		'default',
