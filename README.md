@@ -1,22 +1,22 @@
 ## Definition
-A consumer-driven **telepathy test** between **consumer** 📺 and **producer** 🎥 (services or libs) is a decentralized loose obligation,
+A consumer-driven **telepathy test** between data **consumer** 📺 and **producer** 🎥 (services or libs) is a decentralized loose obligation,
 that for every expectation in consumer, there will be a test in producer. 
 
-What this lib does:
+### Why
+- Avoid breaking changes. Contract binds producer to what consumers expect.
+- Performance & scalability. Unit tests are much faster than any API or UI tests, so you can cover more cases & share it between parties.
+- Maintainance. Unit tests require less infrastructure, you don't need dedicated service to record contracts or spin-up containers.
+- Freedom. Contracts are not enforced by centralized authority (broker/notar etc), like [PACT](https://docs.pact.io/) does. Its up to developer to decide how exactly test on producer side will be implemented and how will be mocked. This drives increased code coverage of the producer.
+
+### Features
 - helps to record a mock expectations as a contract into a file on every unit test execution from consumer side
 - defines contract as a dependency between services stored in specific, interchangeable format (JSON)
 - helps to validate that contracts on both sides match
 - language and framework agnostic
 
-What contract-tests **do not** specify or do:
-- what type of a test producer will have (unit or functional), to have integrations more lightweight & not need state management (db, containers), [PACT](https://docs.pact.io/) adds integration tests for producer.
-- how strict or good the test is going to be and if its going to use recorded mock payload at all
-- contracts are not enforced by centralized authority (broker/notar etc), like [PACT](https://docs.pact.io/) does. So its up to both parties to implement contract consistency validation & implement its content
-
 <img width="1020" alt="Screenshot 2020-12-03 at 01 04 49" src="https://user-images.githubusercontent.com/445122/100942229-a0918f00-3503-11eb-8d36-15c70b0f2dcf.png">
 
 ## Usage
-
 ```
 npm install @pipedrive/telepathy --save-dev
 ```
