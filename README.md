@@ -100,7 +100,7 @@ In your producer service, edit package.json, add array of consumers your service
 	"consumers": [
 		  {
 			  "name": "monograph",
-			  "repo": "https://github.com/pipedrive/monograph",
+			  "repo": "git@github.com:pipedrive/monograph.git",
 			  "branch": "CTL-1545-contracts",
 			  "folder": "test/contract/producers/",
 		  }
