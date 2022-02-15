@@ -1,6 +1,5 @@
 # telepathy
-A consumer-driven **telepathy test** between data **consumer** 📺 and **producer** 🎥 (services or libs) is a decentralized loose obligation,
-that for every recorded mock in consumer's unit test, there will be a unit test in producer. 
+A consumer-driven **telepathy test** between data **consumer** 📺 and **producer** 🎥 (services or libs) is a decentralized ([git](https://git-scm.com/)-based) loose obligation, that for every recorded mock in consumer's unit test, there will be a unit test in producer. 
 
 ## Why
 - Avoid breaking changes. Contract binds producer to what consumers expect.
