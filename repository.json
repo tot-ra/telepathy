@@ -1,0 +1,7 @@
+{
+  "name": "telepathy",
+  "description": "Contract testing library",
+  "owner": "CORE",
+  "type": "library",
+  "status": "released"
+}
