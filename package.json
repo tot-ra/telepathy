@@ -1,6 +1,6 @@
 {
   "name": "@pipedrive/telepathy",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Contract testing library",
   "main": "index.js",
   "scripts": {
@@ -10,10 +10,13 @@
     "type": "git",
     "url": "git+https://github.com/pipedrive/telepathy.git"
   },
-  "author": "CORE tribe",
+  "author": "Pipedrive / CORE tribe / Artjom Kurapov",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/pipedrive/telepathy/issues"
   },
-  "homepage": "https://github.com/pipedrive/telepathy#readme"
+  "homepage": "https://github.com/pipedrive/telepathy#readme",
+  "dependencies": {
+    "shelljs": "0.8.5"
+  }
 }
