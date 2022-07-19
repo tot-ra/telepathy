@@ -1,0 +1,12 @@
+name: lint & test
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+jobs:
+  lint-test:
+    uses: pipedrive/gha-setup/.github/workflows/reusable_lint-test-node.yml@master
+    secrets: inherit
